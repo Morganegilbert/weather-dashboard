@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <link
+          rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        />  
+        <link
+        rel="stylesheet"
+        href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+        crossorigin="anonymous"
+      />
+      <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap"
+        rel="stylesheet"
+      />
+      <link rel="stylesheet" href="./assets/css/style.css" />
+      <title>Weather Dashboard</title>
+    </head>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>      
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <body>
+        <header class="jumbotron text-center">
+            <h1>Weather Dashboard</h1>
+        </header>
+        <div class="container-fluid city-search" style="height: 100%;">
+            <div class="row ">
+                <div class="col-4">
+                    <h2 class="child search-title">Search for a City:</h2>
+                    <input class="child search-results" placeholder="Example: Raleigh, NC"></input>
+                    <button type="submit" class="child btn btn-primary">Submit</button>
+                </div>
+                <div class="col-8">
+                    <div class="results">
+                        <div class="row child">
+                            <div>Results Here</div>
+                        </div>
+                        <div class="row child">
+                            <h3>5-Day Forecast:</h2>
+                            <div class="five-day-forcast"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+
+            </script>
+        </div>
+    </body>
+</html>
