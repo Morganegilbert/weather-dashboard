@@ -2,6 +2,7 @@ var resultList = document.getElementById('results');
 var fetchButton = document.getElementById('fetch-button');
 var apiKey = 'ed329abd942d01f3c302c755d746f0d1';
 var searchInput = document.getElementsByClassName('search-results');
+var fiveDayForcastDiv = document.getElementById('five-day-forcast');
 
 
 
@@ -23,7 +24,7 @@ async function getApi(cityName) {
     var fiveDayUrl = 'http://api.openweathermap.org/data/2.5/forecast?lat=' + lat + '&lon=' + lon +'&appid=' + apiKey;
 
     let fiveDayForcast = await getLocationData(fiveDayUrl);
-    console.log("5-day forcast", fiveDayForcast);
+    console.log("5-day forcast", fiveDayUrl);
     
     console.log("forcast", forcastData);
     console.log('location data', locationData[0].lat);
@@ -38,13 +39,27 @@ async function getApi(cityName) {
         if (response.ok) {
             return response.json();
         } else {
-            throw new Error("Netwoek error")
+            throw new Error("Network error")
         }
     })
     .then((data) => {
         console.log("this is data?", data);
         displayResultsList(forcastData, cityName, cityResultURL);
     });
+
+    fetch(fiveDayUrl)
+    .then((response) => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error("Network error")
+        }
+    })
+    .then((data) => {
+        console.log("this is five day?", data);
+        displayfiveDayForcast(fiveDayForcast, cityName, fiveDayUrl);
+    });
+
     // Displays five day forcast
     // await fiveDayForcastDisplay();
 
@@ -91,29 +106,89 @@ async function displayResultsList(data, cityName) {
     resultCityHeader.textContent = cityName;
     resultCitySearch.appendChild(resultCityHeader);
 
+    // Adds new elements
     let newListUl = document.createElement('ul');
     let newListItemTemp =  document.createElement('ol');
     let newListItemWind =  document.createElement('ol');
     let newListItemHumidity =  document.createElement('ol');
     let newListItemUVIndex =  document.createElement('ol');
+    let humidityDiv = document.createElement ('div');
 
+    // Assigns IDs
     newListItemTemp.id = 'results-temp';
     newListItemWind.id = 'results-wind';
     newListItemHumidity.id = 'results-humidity';
     newListItemUVIndex.id = 'results-uv-Index';
+    humidityDiv.id = 'humidity-div'
 
+    // Assigns inner text with data
     newListItemTemp.textContent = 'Temp: ' + searchResults.temp;
     newListItemWind.textContent = 'Wind: ' + searchResults.wind;
-    newListItemHumidity.textContent = 'Humidity: ' + searchResults.humidity;
+    newListItemHumidity.textContent = 'Humidity: ';
     newListItemUVIndex.textContent = 'UV Index: ' + searchResults.uvIndex;
+    humidityDiv.textContent = searchResults.humidity;
 
+    // Appends Children
+    newListItemHumidity.appendChild(humidityDiv);
     newListUl.appendChild(newListItemTemp);
     newListUl.appendChild(newListItemWind);
     newListUl.appendChild(newListItemHumidity);
     newListUl.appendChild(newListItemUVIndex);
-
     resultCitySearch.appendChild(newListUl);
     
+    // Changes html to javascript html
     resultList.innerHTML = resultCitySearch.innerHTML;
 }
 
+// Displays Five Day Forcast
+async function displayfiveDayForcast(data, cityName) {
+    // Five Day Forcast Results
+    var fiveDayResults = {
+        clouds: data.list[0].weather.description,
+        temp: data.list[0].main.temp,
+        wind: data.list[0].wind.speed,
+        humidity: data.list[0].main.humidity,
+    }
+
+    // Adds new elements
+    let fiveDayResultsSection = document.createElement('div');
+    let dayOne = document.createElement('div');
+    let fiveDayResultsHeader = document.createElement('h2');
+
+    // Assigns IDs to elements, appends days to day section div
+    fiveDayResultsSection.id = 'five-day-results-section';
+    dayOne.id = 'day-one';
+    fiveDayResultsHeader.id = 'five-day-header';
+    fiveDayResultsHeader.textContent = cityName;
+    dayOne.appendChild(fiveDayResultsHeader);
+
+    // Additional elements
+    let newFiveListUl = document.createElement('ul');
+    let newListItemClouds =  document.createElement('ol');
+    let newListItemFiveTemp =  document.createElement('ol');
+    let newListItemFiveWind =  document.createElement('ol');   
+    let newListItemFiveHumidity =  document.createElement('ol');
+
+    // Assigns IDs
+    newListItemClouds.id = 'results-five-clouds';
+    newListItemFiveTemp.id = 'results-five-temp';
+    newListItemFiveWind.id = 'results-five-wind';
+    newListItemFiveHumidity.id = 'results-five-humidity';
+
+    // Assigns inner text with data
+    newListItemClouds.textContent = fiveDayResults.clouds;
+    newListItemFiveTemp.textContent = 'Temp: ' + fiveDayResults.temp;
+    newListItemFiveWind.textContent = 'Wind: ' + fiveDayResults.wind;
+    newListItemFiveHumidity.textContent = 'Humidity: ' + fiveDayResults.humidity;
+
+    // Appends Children
+    newFiveListUl.appendChild(newListItemClouds);
+    newFiveListUl.appendChild(newListItemFiveTemp);
+    newFiveListUl.appendChild(newListItemFiveWind);
+    newFiveListUl.appendChild(newListItemFiveHumidity);
+    dayOne.appendChild(newFiveListUl);
+    fiveDayResultsSection.appendChild(dayOne);
+    
+    // Changes html to javascript html
+    fiveDayForcastDiv.innerHTML = fiveDayResultsSection.innerHTML;
+}
