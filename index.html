@@ -32,26 +32,24 @@
         </header>
         <div class="container-fluid city-search" style="height: 100%;">
             <div class="row ">
-                <div class="col-4">
-                    <h2 class="child search-title">Search for a City:</h2>
-                    <input class="child search-results" placeholder="Example: Raleigh, NC"></input>
-                    <button type="submit" class="child btn btn-primary">Submit</button>
+                <div class="col-3">
+                    <h2 class=" search-input">Search for a City:</h2>
+                    <input class= "search-input" id="search-results" placeholder="Example: Raleigh, NC"></input>
+                    <button type="submit" class="btn btn-primary" id="fetch-button">Submit</button>
                 </div>
                 <div class="col-8">
-                    <div class="results">
-                        <div class="row child">
-                            <div>Results Here</div>
+                    <div>
+                        <div class="row">
+                            <div id="results">Results Here</div>
                         </div>
-                        <div class="row child">
-                            <h3>5-Day Forecast:</h2>
-                            <div class="five-day-forcast"></div>
+                        <div class="row">
+                            <h3 class="five-day-title">5-Day Forecast:</h2>
+                            <div class="row" id="five-day-forcast"></div>
                         </div>
                     </div>
                 </div>
             </div>
-            <script>
-
-            </script>
+            <script src="./assets/js/script.js"></script>
         </div>
     </body>
 </html>
