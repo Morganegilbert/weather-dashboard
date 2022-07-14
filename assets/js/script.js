@@ -8,10 +8,10 @@ const currentDay = moment().format("MM/DD/YYYY");
 // oneDayFuture.setDate(oneDayFuture.getDate() + 1);
 // console.log("this is one day ahead", oneDayFuture);
 var oneDayFuture = moment().add(1, 'days').format("MM/DD/YYYY");
-var twoDayFuture = moment().add(1, 'days').format("MM/DD/YYYY");
-var threeDayFuture = moment().add(1, 'days').format("MM/DD/YYYY");
-var fourDayFuture = moment().add(1, 'days').format("MM/DD/YYYY");
-var fiveDayFuture = moment().add(1, 'days').format("MM/DD/YYYY");
+var twoDayFuture = moment().add(2, 'days').format("MM/DD/YYYY");
+var threeDayFuture = moment().add(3, 'days').format("MM/DD/YYYY");
+var fourDayFuture = moment().add(4, 'days').format("MM/DD/YYYY");
+var fiveDayFuture = moment().add(5, 'days').format("MM/DD/YYYY");
 
 console.log("one day ahead", oneDayFuture);
 
@@ -100,13 +100,20 @@ async function displayResultsList(data, cityName) {
         wind: data.current.wind_speed,
         humidity: data.current.humidity,
         uvIndex: data.current.uvi,
+        clouds: data.current.weather[0].icon,
     }
-
+    
+    var iconurl = "http://openweathermap.org/img/w/" + data.current.weather[0].icon + ".png";
+    
     let resultCitySearch = document.createElement('div');
     let resultCityHeader = document.createElement('h2');
+    let weatherIconImg = document.createElement('img');
+    weatherIconImg.alt = 'Weather Icon';
+    weatherIconImg.src = iconurl;
     resultCitySearch.id = 'search-results';
     resultCityHeader.id = 'result-city-name';
-    resultCityHeader.textContent = cityName + " " + currentDay;
+    resultCityHeader.textContent = cityName + " " + currentDay + " ";
+    resultCityHeader.appendChild(weatherIconImg);
     resultCitySearch.appendChild(resultCityHeader);
 
     // Adds new elements
@@ -124,12 +131,15 @@ async function displayResultsList(data, cityName) {
     newListItemUVIndex.id = 'results-uv-Index';
     humidityDiv.id = 'humidity-div'
 
+    // Converts kelvin to farenheit
+    let newListItemTempF = Math.floor((searchResults.temp - 273) * (9/5) +32);
+
     // Assigns inner text with data
-    newListItemTemp.textContent = 'Temp: ' + searchResults.temp;
-    newListItemWind.textContent = 'Wind: ' + searchResults.wind;
+    newListItemTemp.textContent = 'Temp: ' + newListItemTempF + "°F";
+    newListItemWind.textContent = 'Wind: ' + searchResults.wind + " MPH";
     newListItemHumidity.textContent = 'Humidity: ';
     newListItemUVIndex.textContent = 'UV Index: ' + searchResults.uvIndex;
-    humidityDiv.textContent = searchResults.humidity;
+    humidityDiv.textContent = searchResults.humidity + " %";
 
     // Appends Children
     newListItemHumidity.appendChild(humidityDiv);
@@ -149,43 +159,50 @@ async function displayfiveDayForcast(data, cityName, currentDay) {
 
     // Results one day ahead
     var oneDayResults = {
-        clouds: data.list[1].weather.description,
+        clouds: data.list[1].weather[0].icon,
         temp: data.list[1].main.temp,
         wind: data.list[1].wind.speed,
         humidity: data.list[1].main.humidity,
     }
-    // var oneDayFuture = moment(currentDay).add(1, 'days');
+    var iconOneUrl = "http://openweathermap.org/img/w/" + data.list[1].weather[0].icon + ".png";
 
     // Adds new elements
     let fiveDayResultsSection = document.createElement('div');
     let dayOne = document.createElement('div');
-    let oneDayResultsHeader = document.createElement('h3');
+    let oneDayResultsHeader = document.createElement('h4');
 
     // Assigns IDs to elements, appends days to day section div
     fiveDayResultsSection.id = 'five-day-results-section';
     dayOne.id = 'day-one';
     oneDayResultsHeader.id = 'one-day-header';
-    oneDayResultsHeader.textContent = cityName + oneDayFuture;
+    oneDayResultsHeader.textContent = cityName + " " + oneDayFuture;
     dayOne.appendChild(oneDayResultsHeader);
 
     // Additional elements
     let newListOneUl = document.createElement('ul');
-    let newListItemOneClouds =  document.createElement('ol');
+    let newListItemOneClouds =  document.createElement('img');
     let newListItemOneTemp =  document.createElement('ol');
     let newListItemOneWind =  document.createElement('ol');   
     let newListItemOneHumidity =  document.createElement('ol');
 
+    // Adding alt and src to weather icon
+    newListItemOneClouds.alt = 'Weather Icon';
+    newListItemOneClouds.src = iconOneUrl;
+    
     // Assigns IDs
     newListItemOneClouds.id = 'results-one-clouds';
     newListItemOneTemp.id = 'results-one-temp';
     newListItemOneWind.id = 'results-one-wind';
     newListItemOneHumidity.id = 'results-one-humidity';
 
+    // Converts kelvin to farenheit
+    let newListItemOneTempF = Math.floor((oneDayResults.temp - 273) * (9/5) +32);
+
     // Assigns inner text with data
-    newListItemOneClouds.textContent = oneDayResults.clouds;
-    newListItemOneTemp.textContent = 'Temp: ' + oneDayResults.temp;
-    newListItemOneWind.textContent = 'Wind: ' + oneDayResults.wind;
-    newListItemOneHumidity.textContent = 'Humidity: ' + oneDayResults.humidity;
+    newListItemOneClouds.textContent = '';
+    newListItemOneTemp.textContent = 'Temp: ' + newListItemOneTempF + "°F";
+    newListItemOneWind.textContent = 'Wind: ' + oneDayResults.wind + " MPH";
+    newListItemOneHumidity.textContent = 'Humidity: ' + oneDayResults.humidity + " %";
 
     // Appends Children
     newListOneUl.appendChild(newListItemOneClouds);
@@ -197,28 +214,33 @@ async function displayfiveDayForcast(data, cityName, currentDay) {
 
     // Results 2 Days ahead
     var twoDayResults = {
-        clouds: data.list[2].weather.description,
+        clouds: data.list[2].weather[0].icon,
         temp: data.list[2].main.temp,
         wind: data.list[2].wind.speed,
         humidity: data.list[2].main.humidity,
     }
+    var iconTwoUrl = "http://openweathermap.org/img/w/" + data.list[2].weather[0].icon + ".png";
 
     // Adds new elements
     let dayTwo = document.createElement('div');
-    let twoDayResultsHeader = document.createElement('h3');
+    let twoDayResultsHeader = document.createElement('h4');
 
     // Assigns IDs to elements, appends days to day section div
     dayTwo.id = 'day-two';
     twoDayResultsHeader.id = 'two-day-header';
-    twoDayResultsHeader.textContent = cityName + twoDayFuture;
+    twoDayResultsHeader.textContent = cityName + " " + twoDayFuture;
     dayTwo.appendChild(twoDayResultsHeader);
 
     // Additional elements
     let newListTwoUl = document.createElement('ul');
-    let newListItemTwoClouds =  document.createElement('ol');
+    let newListItemTwoClouds =  document.createElement('img');
     let newListItemTwoTemp =  document.createElement('ol');
     let newListItemTwoWind =  document.createElement('ol');   
     let newListItemTwoHumidity =  document.createElement('ol');
+
+    // Adding alt and src to weather icon
+    newListItemTwoClouds.alt = 'Weather Icon';
+    newListItemTwoClouds.src = iconTwoUrl;
 
     // Assigns IDs
     newListItemTwoClouds.id = 'results-two-clouds';
@@ -226,11 +248,14 @@ async function displayfiveDayForcast(data, cityName, currentDay) {
     newListItemTwoWind.id = 'results-two-wind';
     newListItemTwoHumidity.id = 'results-two-humidity';
 
+    // Converts kelvin to farenheit
+    let newListItemTwoTempF = Math.floor((twoDayResults.temp - 273) * (9/5) +32);
+
     // Assigns inner text with data
-    newListItemTwoClouds.textContent = twoDayResults.clouds;
-    newListItemTwoTemp.textContent = 'Temp: ' + twoDayResults.temp;
-    newListItemTwoWind.textContent = 'Wind: ' + twoDayResults.wind;
-    newListItemTwoHumidity.textContent = 'Humidity: ' + twoDayResults.humidity;
+    newListItemTwoClouds.textContent = '';
+    newListItemTwoTemp.textContent = 'Temp: ' + newListItemTwoTempF + "°F";
+    newListItemTwoWind.textContent = 'Wind: ' + twoDayResults.wind + " MPH";
+    newListItemTwoHumidity.textContent = 'Humidity: ' + twoDayResults.humidity + " %";
 
     // Appends Children
     newListTwoUl.appendChild(newListItemTwoClouds);
@@ -242,28 +267,33 @@ async function displayfiveDayForcast(data, cityName, currentDay) {
 
     // Results 3 Days ahead
     var threeDayResults = {
-        clouds: data.list[3].weather.description,
+        clouds: data.list[3].weather[0].icon,
         temp: data.list[3].main.temp,
         wind: data.list[3].wind.speed,
         humidity: data.list[3].main.humidity,
     }
+    var iconThreeUrl = "http://openweathermap.org/img/w/" + data.list[3].weather[0].icon + ".png";
 
     // Adds new elements
     let dayThree = document.createElement('div');
-    let threeDayResultsHeader = document.createElement('h3');
+    let threeDayResultsHeader = document.createElement('h4');
 
     // Assigns IDs to elements, appends days to day section div
     dayThree.id = 'day-three';
     threeDayResultsHeader.id = 'three-day-header';
-    threeDayResultsHeader.textContent = cityName + threeDayFuture;
+    threeDayResultsHeader.textContent = cityName + " " + threeDayFuture;
     dayThree.appendChild(threeDayResultsHeader);
 
     // Additional elements
     let newListThreeUl = document.createElement('ul');
-    let newListItemThreeClouds =  document.createElement('ol');
+    let newListItemThreeClouds =  document.createElement('img');
     let newListItemThreeTemp =  document.createElement('ol');
     let newListItemThreeWind =  document.createElement('ol');   
     let newListItemThreeHumidity =  document.createElement('ol');
+
+    // Adding alt and src to weather icon
+    newListItemThreeClouds.alt = 'Weather Icon';
+    newListItemThreeClouds.src = iconThreeUrl;
 
     // Assigns IDs
     newListItemThreeClouds.id = 'results-three-clouds';
@@ -271,11 +301,14 @@ async function displayfiveDayForcast(data, cityName, currentDay) {
     newListItemThreeWind.id = 'results-three-wind';
     newListItemThreeHumidity.id = 'results-three-humidity';
 
+    // Converts kelvin to farenheit
+    let newListItemThreeTempF = Math.floor((threeDayResults.temp - 273) * (9/5) +32);
+
     // Assigns inner text with data
-    newListItemThreeClouds.textContent = threeDayResults.clouds;
-    newListItemThreeTemp.textContent = 'Temp: ' + threeDayResults.temp;
-    newListItemThreeWind.textContent = 'Wind: ' + threeDayResults.wind;
-    newListItemThreeHumidity.textContent = 'Humidity: ' + threeDayResults.humidity;
+    newListItemThreeClouds.textContent = '';
+    newListItemThreeTemp.textContent = 'Temp: ' + newListItemThreeTempF + "°F";
+    newListItemThreeWind.textContent = 'Wind: ' + threeDayResults.wind + " MPH";
+    newListItemThreeHumidity.textContent = 'Humidity: ' + threeDayResults.humidity + " %";
 
     // Appends Children
     newListThreeUl.appendChild(newListItemThreeClouds);
@@ -287,28 +320,34 @@ async function displayfiveDayForcast(data, cityName, currentDay) {
 
     // Results 4 Days ahead
     var fourDayResults = {
-        clouds: data.list[4].weather.description,
+        clouds: data.list[4].weather[0].icon,
         temp: data.list[4].main.temp,
         wind: data.list[4].wind.speed,
         humidity: data.list[4].main.humidity,
     }
 
+    var iconFourUrl = "http://openweathermap.org/img/w/" + data.list[4].weather[0].icon + ".png";
+
     // Adds new elements
     let dayFour = document.createElement('div');
-    let fourDayResultsHeader = document.createElement('h3');
+    let fourDayResultsHeader = document.createElement('h4');
 
     // Assigns IDs to elements, appends days to day section div
     dayFour.id = 'day-four';
     fourDayResultsHeader.id = 'four-day-header';
-    fourDayResultsHeader.textContent = cityName + fourDayFuture;
+    fourDayResultsHeader.textContent = cityName + " " + fourDayFuture;
     dayFour.appendChild(fourDayResultsHeader);
 
     // Additional elements
     let newListFourUl = document.createElement('ul');
-    let newListItemFourClouds =  document.createElement('ol');
+    let newListItemFourClouds =  document.createElement('img');
     let newListItemFourTemp =  document.createElement('ol');
     let newListItemFourWind =  document.createElement('ol');   
     let newListItemFourHumidity =  document.createElement('ol');
+    
+    // Adding alt and src to weather icon
+    newListItemFourClouds.alt = 'Weather Icon';
+    newListItemFourClouds.src = iconFourUrl;
 
     // Assigns IDs
     newListItemFourClouds.id = 'results-four-clouds';
@@ -316,11 +355,14 @@ async function displayfiveDayForcast(data, cityName, currentDay) {
     newListItemFourWind.id = 'results-four-wind';
     newListItemFourHumidity.id = 'results-four-humidity';
 
+    // Converts kelvin to farenheit
+    let newListItemFourTempF = Math.floor((fourDayResults.temp - 273) * (9/5) +32);
+
     // Assigns inner text with data
     newListItemFourClouds.textContent = fourDayResults.clouds;
-    newListItemFourTemp.textContent = 'Temp: ' + fourDayResults.temp;
-    newListItemFourWind.textContent = 'Wind: ' + fourDayResults.wind;
-    newListItemFourHumidity.textContent = 'Humidity: ' + fourDayResults.humidity;
+    newListItemFourTemp.textContent = 'Temp: ' + newListItemFourTempF + "°F";
+    newListItemFourWind.textContent = 'Wind: ' + fourDayResults.wind + " MPH";
+    newListItemFourHumidity.textContent = 'Humidity: ' + fourDayResults.humidity + " %";
 
     // Appends Children
     newListFourUl.appendChild(newListItemFourClouds);
@@ -332,41 +374,51 @@ async function displayfiveDayForcast(data, cityName, currentDay) {
 
     // Results 5 Days ahead
     var fiveDayResults = {
-        clouds: data.list[3].weather.description,
+        clouds: data.list[5].weather[0].icon,
         temp: data.list[3].main.temp,
         wind: data.list[3].wind.speed,
         humidity: data.list[3].main.humidity,
     }
 
+    var iconFiveUrl = "http://openweathermap.org/img/w/" + data.list[5].weather[0].icon + ".png";
+
     // Adds new elements
     let dayFive = document.createElement('div');
-    let fiveDayResultsHeader = document.createElement('h3');
+    let fiveDayResultsHeader = document.createElement('h4');
 
     // Assigns IDs to elements, appends days to day section div
     dayFive.id = 'day-five';
     fiveDayResultsHeader.id = 'five-day-header';
-    fiveDayResultsHeader.textContent = cityName + fiveDayFuture;
+    fiveDayResultsHeader.textContent = cityName + " " + fiveDayFuture;
     dayFive.appendChild(fiveDayResultsHeader);
 
     // Additional elements
     let newListFiveUl = document.createElement('ul');
-    let newListItemFiveClouds =  document.createElement('ol');
+    let newListItemFiveClouds =  document.createElement('img');
     let newListItemFiveTemp =  document.createElement('ol');
     let newListItemFiveWind =  document.createElement('ol');   
     let newListItemFiveHumidity =  document.createElement('ol');
+    
+    // Adding alt and src to weather icon
+    newListItemFiveClouds.alt = 'Weather Icon';
+    newListItemFiveClouds.src = iconFiveUrl;
 
     // Assigns IDs
     newListItemFiveClouds.id = 'results-five-clouds';
     newListItemFiveTemp.id = 'results-five-temp';
     newListItemFiveWind.id = 'results-five-wind';
     newListItemFiveHumidity.id = 'results-five-humidity';
+    
+    // Converts kelvin to farenheit
+    let newListItemFiveTempF = Math.floor((fiveDayResults.temp - 273) * (9/5) +32);
 
     // Assigns inner text with data
     newListItemFiveClouds.textContent = fiveDayResults.clouds;
-    newListItemFiveTemp.textContent = 'Temp: ' + fiveDayResults.temp;
-    newListItemFiveWind.textContent = 'Wind: ' + fiveDayResults.wind;
-    newListItemFiveHumidity.textContent = 'Humidity: ' + fiveDayResults.humidity;
+    newListItemFiveTemp.textContent = 'Temp: ' + newListItemFiveTempF + "°F";
+    newListItemFiveWind.textContent = 'Wind: ' + fiveDayResults.wind + " MPH";
+    newListItemFiveHumidity.textContent = 'Humidity: ' + fiveDayResults.humidity + " %";
 
+    console.log("f", newListItemFiveTempF)
     // Appends Children
     newListFiveUl.appendChild(newListItemFiveClouds);
     newListFiveUl.appendChild(newListItemFiveTemp);
@@ -375,6 +427,12 @@ async function displayfiveDayForcast(data, cityName, currentDay) {
     dayFive.appendChild(newListFiveUl);
     fiveDayResultsSection.appendChild(dayFive);
 
+    // Converts kelvin to farenheit
+    // document.getElementById("results-f")
     // Changes html to javascript html
     fiveDayForcastDiv.innerHTML = fiveDayResultsSection.innerHTML;
 }
+
+// async function convertTempurature(newListItemOneClouds, newListItemTwoClouds, newListItemThreeClouds, newListItemFourClouds, newListItemFiveClouds) {
+
+// }
