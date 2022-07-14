@@ -128,7 +128,7 @@ async function displayResultsList(data, cityName) {
     newListItemTemp.id = 'results-temp';
     newListItemWind.id = 'results-wind';
     newListItemHumidity.id = 'results-humidity';
-    newListItemUVIndex.id = 'results-uv-Index';
+    newListItemUVIndex.id = 'results-uv-index';
     humidityDiv.id = 'humidity-div'
 
     // Converts kelvin to farenheit

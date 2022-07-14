@@ -44,7 +44,7 @@ h4 {
 
 .btn {
   border-left: 1px solid black;
-  margin: 0 10px;
+  margin: 0 10px 40px 10px;
   padding: 5px;
   width: 440px;
   /* border-top-right-radius: 15px;
@@ -58,10 +58,18 @@ h4 {
   transition: all .3s ease-in-out;
 }
 
+/* .results-box {
+  border: 5px, black;
+} */
 #result-city-name {
   width: 100%;
 }
 
+#results-temp, #results-wind, #results-humidity, #results-uv-index {
+  margin-bottom: 4px;
+  padding: 0;
+  color: black !important;
+} 
 
 .five-day-title {
   font-weight: bold;
@@ -70,7 +78,9 @@ h4 {
 }
 
 #five-day-forcast {
+  flex: 1;
   display: inline-flex;
+  justify-content: space-between;
 }
 
 .results {
@@ -81,4 +91,33 @@ h4 {
 
 .results-humidity {
   display: inline;
+}
+
+#day-one, #day-two, #day-three, #day-four, #day-five {
+  padding-top: 5px;
+  background-color: darkgreen;
+  height: 250px;
+  /* margin: 10px; */
+}
+
+#one-day-header, #two-day-header, #three-day-header, #four-day-header, #five-day-header {
+  color: aliceblue;
+}
+ul {
+  margin-top: 6px;
+  height: 100%;
+}
+
+ol {
+  margin-bottom: 5px;
+  color: aliceblue;
+}
+
+.img {
+  position: center;
+}
+
+ol ol, ol ul, ul ol, ul ul {
+  margin-bottom: 10px;
+  padding: 0;
 }
