@@ -62,7 +62,6 @@ async function getApi(cityName) {
 async function getLocationData(URL) {
     try {
         let res = await fetch(URL);
-        console.log('res', res.json);
         return await res.json();
     } catch (error) {
         console.log(error);
@@ -77,7 +76,6 @@ fetchButton.onclick = async function getCity(event) {
     if (pastResults.length == 8) {
         pastResults.pop();
     }
-    console.log("this is past", pastResults);
     pastResults.unshift({city:cityName}); 
 
     localStorage.setItem('Search', JSON.stringify(pastResults));

@@ -2,16 +2,17 @@ body {
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
   height: 00px;
-    /* line-height: 1; */
 }
 
+/* Header Style */
 .jumbotron {
   text-align: center;
   background-color: darkcyan;
   color: white;
-
+  margin: 0;
 }
 
+/* Base style start */
 .row {
   height: 300px;
   margin-bottom: 5px;
@@ -36,6 +37,7 @@ h4 {
   padding: 10px;
 }
 
+/* Search style start */
 .search-input {
   margin: 10px;
   padding: 5px;
@@ -44,33 +46,44 @@ h4 {
   border-radius: 5px;
 }
 
-.btn {
-  border-left: 1px solid black;
-  margin: 0 10px 40px 10px;
-  padding: 5px;
-  width: 440px;
-  /* border-top-right-radius: 15px;
-  border-bottom-right-radius: 15px; */
-  background-color: #06AED5;
-  color: white;
+.btn-primary {
+  /* border-left: 1px solid black;
+  border-radius: 5px; */
+  margin: 0 10px 40px 10px !important;
+  /* padding: 5px;
+  width: 440px; */
+  background-color: #06AED5 !important;
+  /* color: white; */
 }
 
+.btn {
+  filter: brightness(90%);
+  border-left: 1px solid black;
+  margin: 0 10px 20px 10px;
+  padding: 5px;
+  width: 440px;
+  background-color: #4d99aa;
+  color: white;
+}
 .btn i:hover {
   font-size: 20px;
   transition: all .3s ease-in-out;
+  filter: brightness(100%);
 }
 
-#past-search {
-  width: 100%;
-  margin: 0;
+#past-search-bar {
+  width: 440px;
+  height: 5px;
+  margin: 0 0 0 10px;
   padding: 5px;
   border-top: 5px solid olivedrab;
 }
 
+/* Results sectionstyle start */
 .results-box {
-  /* display: inline-flex; */
   border: 5px solid olivedrab;
 }
+
 #result-city-name {
   width: 100%;
 }
@@ -79,8 +92,15 @@ h4 {
   margin-bottom: 4px;
   padding: 0;
   color: black !important;
+  display: flex;
 } 
 
+#uv-div {
+  width: fit-content;
+  padding: 1px 15px;
+  border-radius: 5%;
+  margin-left: 5px;
+}
 .five-day-title {
   font-weight: bold;
   width: 100%;
@@ -90,7 +110,7 @@ h4 {
 #five-day-forcast {
   flex: 1;
   display: inline-flex;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .results {
@@ -102,11 +122,12 @@ h4 {
   display: inline;
 }
 
+/* Five day results style start */
 #day-one, #day-two, #day-three, #day-four, #day-five {
   padding-top: 5px;
   background-color: darkgreen;
   height: 250px;
-  /* margin: 10px; */
+  width: 200px;
 }
 
 #one-day-header, #two-day-header, #three-day-header, #four-day-header, #five-day-header {
