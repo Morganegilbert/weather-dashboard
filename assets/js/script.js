@@ -95,6 +95,7 @@ fetchButton.onclick = async function getCity(event) {
 
     await getApi(cityName);
     await displayPastSearches(event);
+    await assignFunctionality();
 }
 
 // Displays current results for City
@@ -448,38 +449,33 @@ async function displayPastSearches(event) {
 
     console.log("past result", pastResults[0]);
     for (var i = 0; i < pastResults.length; i++) {
-        let pastSearchResult = document.createElement('btn');
+        let pastSearchResult = document.createElement('div');
         pastSearchResult.className = "btn";
-        pastSearchResult.id = "fetch-past-button";
+        pastSearchResult.id = "fetch-past-button" + "-" + i;
         pastSearchResult.textContent = pastResults[i].city;
         pastSearchContainer.appendChild(pastSearchResult);
     }
     pastSearch.replaceWith(pastSearchContainer);
-    await reload();
+    // await reload();
 }
 
-async function reload(){
-    var container = document.getElementById("past-search-container");
-    var content = container.innerHTML;
-    container.innerHTML= content; 
-
-}
+// Attempted to reload past search list on submit
+// async function reload(){
+//     var container = document.getElementById("past-search-container");
+//     var content = container.innerHTML;
+//     container.innerHTML= content; 
+// }
 
 // Past Search click function
-// document.getElementById('fetch-past-button').onclick = async function getPastCity(event) {
-//     console.log("event", event);
-    // event.preventDefault();
-    // var cityName = document.getElementById("search-results").value;
-    // let pastResults = JSON.parse(localStorage.getItem('Search') || "[]");
-    // if (pastResults.length == 8) {
-    //     pastResults.pop();
-    // }
-    // console.log("this is past", pastResults);
-    // pastResults.unshift({city:cityName}); 
+async function assignFunctionality() {
 
-    // localStorage.setItem('Search', JSON.stringify(pastResults));
+    let pastResults = JSON.parse(window.localStorage.getItem('Search'));
+    let pastSearchContainer = document.createElement('div');
+    pastSearchContainer.id = "past-search-container";
 
-    // await getApi(cityName);
-    // await displayPastSearches(event);
-    // await assignPastSearchFunction();
-// }
+    for (var i = 0; i < pastResults.length; i++) {
+        var pastCityButton = document.getElementById("fetch-past-button" + "-" + i);
+        console.log("button", pastCityButton);
+        pastCityButton.addEventListener('click', function(event) {getApi(event.path[0].innerHTML)});
+    }
+}
