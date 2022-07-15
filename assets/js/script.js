@@ -14,9 +14,10 @@ var fourDayFuture = moment().add(4, 'days').format("MM/DD/YYYY");
 var fiveDayFuture = moment().add(5, 'days').format("MM/DD/YYYY");
 
 async function getApi(cityName) {
+    console.log("city name?", cityName);
     // var cityName = '';
-    var geolocatingURL = 'http://api.openweathermap.org/geo/1.0/direct?q=' + cityName + '&limit=8&appid=' + apiKey;
-    reverseGeolocatingURL = 'http://api.openweathermap.org/geo/1.0/reverse?lat={lat}&lon={lon}&limit={limit}&appid=' + apiKey;
+    var geolocatingURL = 'https://api.openweathermap.org/geo/1.0/direct?q=' + cityName + '&limit=8&appid=' + apiKey;
+    reverseGeolocatingURL = 'https://api.openweathermap.org/geo/1.0/reverse?lat={lat}&lon={lon}&limit={limit}&appid=' + apiKey;
     console.log('This is location URL', geolocatingURL);
 
     // Changes lat/lon based on city provided
@@ -28,7 +29,7 @@ async function getApi(cityName) {
     console.log("Result", cityResultURL);
     let forcastData = await getLocationData(cityResultURL);
     
-    var fiveDayUrl = 'http://api.openweathermap.org/data/2.5/forecast?lat=' + lat + '&lon=' + lon +'&appid=' + apiKey;
+    var fiveDayUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + lat + '&lon=' + lon +'&appid=' + apiKey;
 
     let fiveDayForcast = await getLocationData(fiveDayUrl);
     console.log("5-day forcast", fiveDayUrl);
@@ -80,7 +81,7 @@ async function getLocationData(URL) {
 }
 
 // Starts search, saves search to local storage
-fetchButton.onclick = function getCity(event) {
+fetchButton.onclick = async function getCity(event) {
     event.preventDefault();
     var cityName = document.getElementById("search-results").value;
     let pastResults = JSON.parse(localStorage.getItem('Search') || "[]");
@@ -92,8 +93,8 @@ fetchButton.onclick = function getCity(event) {
 
     localStorage.setItem('Search', JSON.stringify(pastResults));
 
-    getApi(cityName);
-    displayPastSearches(event);
+    await getApi(cityName);
+    await displayPastSearches(event);
 }
 
 // Displays current results for City
@@ -449,7 +450,7 @@ async function displayPastSearches(event) {
     for (var i = 0; i < pastResults.length; i++) {
         let pastSearchResult = document.createElement('btn');
         pastSearchResult.className = "btn";
-        pastSearchResult.id = "fetch-button";
+        pastSearchResult.id = "fetch-past-button";
         pastSearchResult.textContent = pastResults[i].city;
         pastSearchContainer.appendChild(pastSearchResult);
     }
@@ -463,3 +464,22 @@ async function reload(){
     container.innerHTML= content; 
 
 }
+
+// Past Search click function
+// document.getElementById('fetch-past-button').onclick = async function getPastCity(event) {
+//     console.log("event", event);
+    // event.preventDefault();
+    // var cityName = document.getElementById("search-results").value;
+    // let pastResults = JSON.parse(localStorage.getItem('Search') || "[]");
+    // if (pastResults.length == 8) {
+    //     pastResults.pop();
+    // }
+    // console.log("this is past", pastResults);
+    // pastResults.unshift({city:cityName}); 
+
+    // localStorage.setItem('Search', JSON.stringify(pastResults));
+
+    // await getApi(cityName);
+    // await displayPastSearches(event);
+    // await assignPastSearchFunction();
+// }
