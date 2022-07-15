@@ -14,11 +14,9 @@ var fourDayFuture = moment().add(4, 'days').format("MM/DD/YYYY");
 var fiveDayFuture = moment().add(5, 'days').format("MM/DD/YYYY");
 
 async function getApi(cityName) {
-    console.log("city name?", cityName);
     // var cityName = '';
     var geolocatingURL = 'https://api.openweathermap.org/geo/1.0/direct?q=' + cityName + '&limit=8&appid=' + apiKey;
     reverseGeolocatingURL = 'https://api.openweathermap.org/geo/1.0/reverse?lat={lat}&lon={lon}&limit={limit}&appid=' + apiKey;
-    console.log('This is location URL', geolocatingURL);
 
     // Changes lat/lon based on city provided
     let locationData = await getLocationData(geolocatingURL);
@@ -26,18 +24,11 @@ async function getApi(cityName) {
     var lon = locationData[0].lon;
 
     var cityResultURL = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&appid=' + apiKey;
-    console.log("Result", cityResultURL);
     let forcastData = await getLocationData(cityResultURL);
     
     var fiveDayUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + lat + '&lon=' + lon +'&appid=' + apiKey;
 
     let fiveDayForcast = await getLocationData(fiveDayUrl);
-    console.log("5-day forcast", fiveDayUrl);
-    
-    console.log("forcast", forcastData);
-    console.log('location data', locationData[0].lat);
-    console.log('location lat', lat);
-    console.log('location lon', lon);
 
     // Fetches city results for current forcast
     fetch(cityResultURL)
@@ -49,7 +40,6 @@ async function getApi(cityName) {
         }
     })
     .then((data) => {
-        console.log("this is data?", data);
         displayResultsList(forcastData, cityName, cityResultURL);
     });
 
@@ -63,7 +53,6 @@ async function getApi(cityName) {
         }
     })
     .then((data) => {
-        console.log("this is five day?", data);
         displayfiveDayForcast(fiveDayForcast, cityName, fiveDayUrl);
     });
 
@@ -146,6 +135,16 @@ async function displayResultsList(data, cityName) {
     newListItemUVIndex.textContent = 'UV Index: ';
     uvDiv.textContent = searchResults.uvIndex;
 
+    // Changes UV color
+    if (searchResults.uvIndex >= 0 && searchResults.uvIndex <= 2) {
+        uvDiv.style.background = 'green';
+    } 
+    else if (searchResults.uvIndex >= 6 && searchResults.uvIndex <= 7) {
+        uvDiv.style.background = 'orange';
+    }
+    else if (searchResults.uvIndex >= 8 && searchResults.uvIndex <= 10) {
+        uvDiv.style.background = 'red';
+    }
     // Appends Children
     newListItemUVIndex.appendChild(uvDiv);
     newListUl.appendChild(newListItemTemp);
@@ -423,7 +422,6 @@ async function displayfiveDayForcast(data, cityName, currentDay) {
     newListItemFiveWind.textContent = 'Wind: ' + fiveDayResults.wind + " MPH";
     newListItemFiveHumidity.textContent = 'Humidity: ' + fiveDayResults.humidity + " %";
 
-    console.log("f", newListItemFiveTempF)
     // Appends Children
     newListFiveUl.appendChild(newListItemFiveClouds);
     newListFiveUl.appendChild(newListItemFiveTemp);
@@ -447,7 +445,6 @@ async function displayPastSearches(event) {
     pastSearchContainer.id = "past-search-container";
 
 
-    console.log("past result", pastResults[0]);
     for (var i = 0; i < pastResults.length; i++) {
         let pastSearchResult = document.createElement('div');
         pastSearchResult.className = "btn";
@@ -475,7 +472,7 @@ async function assignFunctionality() {
 
     for (var i = 0; i < pastResults.length; i++) {
         var pastCityButton = document.getElementById("fetch-past-button" + "-" + i);
-        console.log("button", pastCityButton);
         pastCityButton.addEventListener('click', function(event) {getApi(event.path[0].innerHTML)});
     }
 }
+
