@@ -3,19 +3,15 @@ var fetchButton = document.getElementById('fetch-button');
 var apiKey = 'ed329abd942d01f3c302c755d746f0d1';
 var searchInput = document.getElementsByClassName('search-results');
 var fiveDayForcastDiv = document.getElementById('five-day-forcast');
+var pastSearch = document.getElementById('past-search');
+
+// Day variables
 const currentDay = moment().format("MM/DD/YYYY");
-// var oneDayFuture =  moment(currentDay.add(1, 'days').toDate());
-// oneDayFuture.setDate(oneDayFuture.getDate() + 1);
-// console.log("this is one day ahead", oneDayFuture);
 var oneDayFuture = moment().add(1, 'days').format("MM/DD/YYYY");
 var twoDayFuture = moment().add(2, 'days').format("MM/DD/YYYY");
 var threeDayFuture = moment().add(3, 'days').format("MM/DD/YYYY");
 var fourDayFuture = moment().add(4, 'days').format("MM/DD/YYYY");
 var fiveDayFuture = moment().add(5, 'days').format("MM/DD/YYYY");
-
-console.log("one day ahead", oneDayFuture);
-
-// async function 
 
 async function getApi(cityName) {
     // var cityName = '';
@@ -83,14 +79,21 @@ async function getLocationData(URL) {
     }
 }
 
-// Starts search
+// Starts search, saves search to local storage
 fetchButton.onclick = function getCity(event) {
     event.preventDefault();
     var cityName = document.getElementById("search-results").value;
-    let pastResults = JSON.parse(localStorage.getItem('cityName') || "[]");
-    pastResults.push({city:cityName}); 
-    console.log("this is form", cityName);
+    let pastResults = JSON.parse(localStorage.getItem('Search') || "[]");
+    if (pastResults.length == 8) {
+        pastResults.pop();
+    }
+    console.log("this is past", pastResults);
+    pastResults.unshift({city:cityName}); 
+
+    localStorage.setItem('Search', JSON.stringify(pastResults));
+
     getApi(cityName);
+    displayPastSearches(event);
 }
 
 // Displays current results for City
@@ -175,7 +178,7 @@ async function displayfiveDayForcast(data, cityName, currentDay) {
     fiveDayResultsSection.id = 'five-day-results-section';
     dayOne.id = 'day-one';
     oneDayResultsHeader.id = 'one-day-header';
-    oneDayResultsHeader.textContent = cityName + " " + oneDayFuture;
+    oneDayResultsHeader.textContent = oneDayFuture;
     dayOne.appendChild(oneDayResultsHeader);
 
     // Additional elements
@@ -228,7 +231,7 @@ async function displayfiveDayForcast(data, cityName, currentDay) {
     // Assigns IDs to elements, appends days to day section div
     dayTwo.id = 'day-two';
     twoDayResultsHeader.id = 'two-day-header';
-    twoDayResultsHeader.textContent = cityName + " " + twoDayFuture;
+    twoDayResultsHeader.textContent = twoDayFuture;
     dayTwo.appendChild(twoDayResultsHeader);
 
     // Additional elements
@@ -281,7 +284,7 @@ async function displayfiveDayForcast(data, cityName, currentDay) {
     // Assigns IDs to elements, appends days to day section div
     dayThree.id = 'day-three';
     threeDayResultsHeader.id = 'three-day-header';
-    threeDayResultsHeader.textContent = cityName + " " + threeDayFuture;
+    threeDayResultsHeader.textContent = threeDayFuture;
     dayThree.appendChild(threeDayResultsHeader);
 
     // Additional elements
@@ -335,7 +338,7 @@ async function displayfiveDayForcast(data, cityName, currentDay) {
     // Assigns IDs to elements, appends days to day section div
     dayFour.id = 'day-four';
     fourDayResultsHeader.id = 'four-day-header';
-    fourDayResultsHeader.textContent = cityName + " " + fourDayFuture;
+    fourDayResultsHeader.textContent = fourDayFuture;
     dayFour.appendChild(fourDayResultsHeader);
 
     // Additional elements
@@ -389,7 +392,7 @@ async function displayfiveDayForcast(data, cityName, currentDay) {
     // Assigns IDs to elements, appends days to day section div
     dayFive.id = 'day-five';
     fiveDayResultsHeader.id = 'five-day-header';
-    fiveDayResultsHeader.textContent = cityName + " " + fiveDayFuture;
+    fiveDayResultsHeader.textContent = fiveDayFuture;
     dayFive.appendChild(fiveDayResultsHeader);
 
     // Additional elements
@@ -433,6 +436,30 @@ async function displayfiveDayForcast(data, cityName, currentDay) {
     fiveDayForcastDiv.innerHTML = fiveDayResultsSection.innerHTML;
 }
 
-// async function convertTempurature(newListItemOneClouds, newListItemTwoClouds, newListItemThreeClouds, newListItemFourClouds, newListItemFiveClouds) {
+// Displays past searches
+async function displayPastSearches(event) {
+    event.preventDefault();
+    // Creates buttons for past search results
+    let pastResults = JSON.parse(window.localStorage.getItem('Search'));
+    let pastSearchContainer = document.createElement('div');
+    pastSearchContainer.id = "past-search-container";
 
-// }
+
+    console.log("past result", pastResults[0]);
+    for (var i = 0; i < pastResults.length; i++) {
+        let pastSearchResult = document.createElement('btn');
+        pastSearchResult.className = "btn";
+        pastSearchResult.id = "fetch-button";
+        pastSearchResult.textContent = pastResults[i].city;
+        pastSearchContainer.appendChild(pastSearchResult);
+    }
+    pastSearch.replaceWith(pastSearchContainer);
+    await reload();
+}
+
+async function reload(){
+    var container = document.getElementById("past-search-container");
+    var content = container.innerHTML;
+    container.innerHTML= content; 
+
+}

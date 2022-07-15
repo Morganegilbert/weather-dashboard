@@ -39,7 +39,9 @@ h4 {
 .search-input {
   margin: 10px;
   padding: 5px;
+  height: 50px;
   width: 440px;
+  border-radius: 5px;
 }
 
 .btn {
@@ -58,9 +60,17 @@ h4 {
   transition: all .3s ease-in-out;
 }
 
-/* .results-box {
-  border: 5px, black;
-} */
+#past-search {
+  width: 100%;
+  margin: 0;
+  padding: 5px;
+  border-top: 5px solid olivedrab;
+}
+
+.results-box {
+  /* display: inline-flex; */
+  border: 5px solid olivedrab;
+}
 #result-city-name {
   width: 100%;
 }
@@ -84,7 +94,6 @@ h4 {
 }
 
 .results {
-
   width: fit-content;
   height: 300px;
 }
