@@ -127,14 +127,14 @@ async function displayResultsList(data, cityName) {
     let newListItemWind =  document.createElement('ol');
     let newListItemHumidity =  document.createElement('ol');
     let newListItemUVIndex =  document.createElement('ol');
-    let humidityDiv = document.createElement ('div');
+    let uvDiv = document.createElement ('div');
 
     // Assigns IDs
     newListItemTemp.id = 'results-temp';
     newListItemWind.id = 'results-wind';
     newListItemHumidity.id = 'results-humidity';
     newListItemUVIndex.id = 'results-uv-index';
-    humidityDiv.id = 'humidity-div'
+    uvDiv.id = 'uv-div'
 
     // Converts kelvin to farenheit
     let newListItemTempF = Math.floor((searchResults.temp - 273) * (9/5) +32);
@@ -142,12 +142,12 @@ async function displayResultsList(data, cityName) {
     // Assigns inner text with data
     newListItemTemp.textContent = 'Temp: ' + newListItemTempF + "°F";
     newListItemWind.textContent = 'Wind: ' + searchResults.wind + " MPH";
-    newListItemHumidity.textContent = 'Humidity: ';
-    newListItemUVIndex.textContent = 'UV Index: ' + searchResults.uvIndex;
-    humidityDiv.textContent = searchResults.humidity + " %";
+    newListItemHumidity.textContent = 'Humidity: ' + data.current.humidity + "%";
+    newListItemUVIndex.textContent = 'UV Index: ';
+    uvDiv.textContent = searchResults.uvIndex;
 
     // Appends Children
-    newListItemHumidity.appendChild(humidityDiv);
+    newListItemUVIndex.appendChild(uvDiv);
     newListUl.appendChild(newListItemTemp);
     newListUl.appendChild(newListItemWind);
     newListUl.appendChild(newListItemHumidity);
